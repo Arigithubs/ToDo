@@ -1,47 +1,46 @@
 /* style.css */
+/* Custom styles for the To-Do app */
+
+/* You can add base styles here if you need to override Tailwind's base styles */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+    /* For example, setting a default font family */
+    font-family: 'Helvetica', 'Arial', sans-serif;
 }
 
-.app {
-    display: flex;
-    justify-content: space-around;
-    width: 80%;
+/* Custom component styles */
+.todo-item {
+    /* Example custom style for a to-do item */
+    border-bottom: 1px solid #e5e7eb; /* light gray border */
+    padding: 1rem;
 }
 
-.column {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 30%;
+/* Utility classes */
+/* Add any utility classes that you want to apply consistently throughout your app */
+.bg-custom {
+    background-color: #f7fafc; /* lightest gray */
 }
 
-.column h2 {
-    color: #333;
-    margin-bottom: 10px;
+.text-custom {
+    color: #2d3748; /* dark gray-blue */
 }
 
-ul {
-    list-style: none;
-    padding: 0;
+/* Responsive classes */
+/* Tailwind uses mobile-first breakpoints. You can add custom responsive styles if needed. */
+@media (min-width: 768px) {
+    .todo-item {
+        padding: 1.5rem;
+    }
 }
 
-ul li {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #eee;
-    cursor: pointer;
+/* State variants */
+/* If you need to style states like hover, focus, etc., you can do so here */
+.todo-item:hover {
+    background-color: #edf2f7; /* light gray */
 }
 
-input[type="text"] {
-    padding: 10px;
-    margin: 10px 0;
-    width: calc(100% - 24px);
-    box-sizing: border-box;
-}
+/* If you're using Tailwind with PostCSS, you can use Tailwind's directives for custom styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* You would add custom utilities here if you're extending Tailwind */
