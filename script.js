@@ -8,72 +8,73 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskText = newTaskInput.value.trim();
         if (taskText) {
             const listItem = createTaskElement(taskText, 'todo');
+            listItem.style.opacity = "0";
             todoList.appendChild(listItem);
+            getComputedStyle(listItem).opacity; // Trigger reflow to reset the animation
+            listItem.style.opacity = "1";
             newTaskInput.value = '';
+            newTaskInput.focus();
             saveTasks();
         }
     }
 
     function createTaskElement(text, status) {
         const listItem = document.createElement('li');
-        listItem.className = 'task-item flex justify-between p-4 bg-white shadow-md mb-2 rounded';
+        listItem.className = `task-item p-4 mb-2 bg-white rounded shadow transition duration-500 ease-in-out transform ${status}`;
         listItem.dataset.status = status;
         
         const taskContent = document.createElement('div');
-        taskContent.className = 'flex-grow';
+        taskContent.className = 'flex-grow pr-4';
         
         const taskText = document.createElement('p');
         taskText.textContent = text;
-        taskText.className = 'task-text';
-        
+        taskText.className = 'task-text m-0';
+
         const editInput = document.createElement('input');
         editInput.type = 'text';
         editInput.value = text;
-        editInput.className = 'task-edit-input hidden w-full';
-        
+        editInput.className = 'task-edit-input hidden w-full rounded p-2 border border-gray-300';
+
         taskContent.appendChild(taskText);
         taskContent.appendChild(editInput);
 
-        const buttonsContainer = document.createElement('div');
-        
-        const editButton = document.createElement('button');
-        editButton.textContent = 'Edit';
-        editButton.className = 'edit-button bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded';
-        editButton.onclick = () => {
-            taskText.classList.toggle('hidden');
-            editInput.classList.toggle('hidden');
+        taskText.addEventListener('click', () => {
+            taskText.classList.add('hidden');
+            editInput.classList.remove('hidden');
             editInput.focus();
-        };
-        
-        editInput.onblur = () => {
+        });
+
+        editInput.addEventListener('blur', () => {
             taskText.textContent = editInput.value;
-            taskText.classList.toggle('hidden');
-            editInput.classList.toggle('hidden');
+            taskText.classList.remove('hidden');
+            editInput.classList.add('hidden');
             saveTasks();
-        };
+        });
+
+        editInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                editInput.blur();
+            }
+        });
+
+        const buttonsContainer = document.createElement('div');
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.className = 'delete-button bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-2 rounded';
+        deleteButton.innerHTML = '&times;';
+        deleteButton.className = 'delete-button text-red-500 text-2xl p-2 hover:text-red-600 transition duration-300 ease-in-out';
         deleteButton.onclick = () => {
-            listItem.remove();
+            listItem.style.transform = "scale(0)";
+            listItem.style.opacity = "0";
+            listItem.addEventListener('transitionend', () => listItem.remove());
             saveTasks();
         };
 
-        buttonsContainer.appendChild(editButton);
         buttonsContainer.appendChild(deleteButton);
         
         listItem.appendChild(taskContent);
         listItem.appendChild(buttonsContainer);
 
         return listItem;
-    }
-
-    function moveTask(taskElement, newStatus) {
-        const targetList = newStatus === 'doing' ? doingList : newStatus === 'done' ? doneList : todoList;
-        targetList.appendChild(taskElement);
-        taskElement.dataset.status = newStatus;
-        saveTasks();
     }
 
     function saveTasks() {
@@ -90,12 +91,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         tasks.forEach(task => {
             const listItem = createTaskElement(task.text, task.status);
-            if (task.status === 'todo') {
-                todoList.appendChild(listItem);
-            } else if (task.status === 'doing') {
-                doingList.appendChild(listItem);
-            } else if (task.status === 'done') {
-                doneList.appendChild(listItem);
+            switch(task.status) {
+                case 'todo':
+                    todoList.appendChild(listItem);
+                    break;
+                case 'doing':
+                    doingList.appendChild(listItem);
+                    break;
+                case 'done':
+                    doneList.appendChild(listItem);
+                    break;
             }
         });
     }
