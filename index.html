@@ -1,24 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Simple Todo App</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do App</title>
+    <link href="/path_to_your/tailwind.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
-    <div class="app">
-        <div class="column" id="todo">
-            <h2>Todo</h2>
-            <ul id="todo-list"></ul>
-            <input type="text" id="new-task">
-            <button onclick="addTask()">Add Task</button>
+    <div id="app" class="container mx-auto mt-10">
+        <h1 class="text-center text-4xl mb-8">To-Do App</h1>
+        <div id="todo-section">
+            <!-- To-Do Section -->
         </div>
-        <div class="column" id="doing">
-            <h2>Doing</h2>
-            <ul id="doing-list"></ul>
+        <div id="doing-section">
+            <!-- Doing Section -->
         </div>
-        <div class="column" id="done">
-            <h2>Done</h2>
-            <ul id="done-list"></ul>
+        <div id="done-section">
+            <!-- Done Section -->
         </div>
     </div>
     <script src="script.js"></script>
