@@ -1,47 +1,47 @@
-/* style.css */
+/* Custom Styles */
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #444444;
 }
 
-.app {
-    display: flex;
-    justify-content: space-around;
-    width: 80%;
-}
-
-.column {
-    background-color: #fff;
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 30%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .column h2 {
-    color: #333;
-    margin-bottom: 10px;
+    color: #3182ce;
+    text-shadow: 0px 2px 3px rgba(0,0,0,0.1);
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #eee;
+.button {
+    transition: background-color 0.3s ease;
     cursor: pointer;
+    outline: none;
 }
 
-input[type="text"] {
-    padding: 10px;
-    margin: 10px 0;
-    width: calc(100% - 24px);
-    box-sizing: border-box;
+.button:hover {
+    transition: background-color 0.3s ease;
+}
+
+.task-item {
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    border-left: 5px solid #3182ce;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Keyframes for animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
 }
