@@ -1,22 +1,28 @@
-# To-Do App
+# Simple Todo App
 
-This is a simple to-do application created by Arigithubs using HTML, JavaScript, and styled with Tailwind CSS.
+A sophisticated to-do application built with HTML, CSS, JavaScript, and Tailwind CSS.
 
 ## Features
 
-- Add tasks to a to-do list.
-- Move tasks between To-Do, Doing, and Done sections.
-- Store tasks in local storage for persistence.
+- Create tasks and add them to the To-Do list.
+- Edit tasks directly within the list.
+- Delete tasks as needed.
+- Persistent task storage with local storage.
+
+## Setup
+
+Clone this repository and open the `index.html` file in your web browser to start using the app.
 
 ## Usage
 
-Open `index.html` in your browser to use the application.
+- Add a task by typing into the input box and clicking 'Add Task'.
+- Edit a task by clicking 'Edit', make changes, and then click outside the input to save.
+- Delete a task by clicking 'Delete'.
 
-## Contribution
+## Contributions
 
-Contributions are welcome. Please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
+Contributions are welcome. Please fork the repository and open a pull request with your suggested changes.
 
 ## License
-[MIT](https://choosealicense.com/licenses/mit/)
+
+This project is open source and available under the [MIT License](LICENSE).
