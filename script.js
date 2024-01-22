@@ -16,69 +16,78 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createTaskElement(text, status) {
         const listItem = document.createElement('li');
-        listItem.className = 'border-b border-gray-200 p-2 flex justify-between items-center';
+        listItem.className = 'task-item flex justify-between p-4 bg-white shadow-md mb-2 rounded';
         listItem.dataset.status = status;
         
-        const taskContent = document.createElement('span');
-        taskContent.textContent = text;
+        const taskContent = document.createElement('div');
+        taskContent.className = 'flex-grow';
         
+        const taskText = document.createElement('p');
+        taskText.textContent = text;
+        taskText.className = 'task-text';
+        
+        const editInput = document.createElement('input');
+        editInput.type = 'text';
+        editInput.value = text;
+        editInput.className = 'task-edit-input hidden w-full';
+        
+        taskContent.appendChild(taskText);
+        taskContent.appendChild(editInput);
+
         const buttonsContainer = document.createElement('div');
         
-        const doingButton = document.createElement('button');
-        doingButton.textContent = 'Start Doing';
-        doingButton.className = 'bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded';
-        doingButton.onclick = function() {
-            moveTask(this.parentElement.parentElement, 'doing');
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Edit';
+        editButton.className = 'edit-button bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-2 rounded';
+        editButton.onclick = () => {
+            taskText.classList.toggle('hidden');
+            editInput.classList.toggle('hidden');
+            editInput.focus();
         };
         
-        const doneButton = document.createElement('button');
-        doneButton.textContent = 'Mark Done';
-        doneButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded ml-2';
-        doneButton.onclick = function() {
-            moveTask(this.parentElement.parentElement, 'done');
-        };
-        
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.className = 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2';
-        deleteButton.onclick = function() {
-            this.parentElement.parentElement.remove();
+        editInput.onblur = () => {
+            taskText.textContent = editInput.value;
+            taskText.classList.toggle('hidden');
+            editInput.classList.toggle('hidden');
             saveTasks();
         };
-        
-        buttonsContainer.appendChild(doingButton);
-        buttonsContainer.appendChild(doneButton);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.className = 'delete-button bg-red-400 hover:bg-red-500 text-white font-bold py-1 px-2 rounded';
+        deleteButton.onclick = () => {
+            listItem.remove();
+            saveTasks();
+        };
+
+        buttonsContainer.appendChild(editButton);
         buttonsContainer.appendChild(deleteButton);
         
         listItem.appendChild(taskContent);
         listItem.appendChild(buttonsContainer);
-        
+
         return listItem;
     }
 
     function moveTask(taskElement, newStatus) {
-        const targetList = newStatus === 'doing' ? doingList : doneList;
+        const targetList = newStatus === 'doing' ? doingList : newStatus === 'done' ? doneList : todoList;
         targetList.appendChild(taskElement);
         taskElement.dataset.status = newStatus;
         saveTasks();
     }
 
     function saveTasks() {
-        const tasks = [];
-
-        document.querySelectorAll('.column ul li').forEach(taskElement => {
-            tasks.push({
-                text: taskElement.querySelector('span').textContent,
+        const tasks = Array.from(document.querySelectorAll('.task-item')).map(taskElement => {
+            return {
+                text: taskElement.querySelector('.task-text').textContent,
                 status: taskElement.dataset.status
-            });
+            };
         });
-
         localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
     function loadTasks() {
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
         tasks.forEach(task => {
             const listItem = createTaskElement(task.text, task.status);
             if (task.status === 'todo') {
