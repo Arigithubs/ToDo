@@ -7,16 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
     function addTask() {
         const taskText = newTaskInput.value.trim();
         if (taskText) {
-            const listItem = createTaskElement(taskText);
+            const listItem = createTaskElement(taskText, 'todo');
             todoList.appendChild(listItem);
             newTaskInput.value = '';
-            updateLocalStorage();
+            saveTasks();
         }
     }
 
-    function createTaskElement(text) {
+    function createTaskElement(text, status) {
         const listItem = document.createElement('li');
         listItem.className = 'border-b border-gray-200 p-2 flex justify-between items-center';
+        listItem.dataset.status = status;
         
         const taskContent = document.createElement('span');
         taskContent.textContent = text;
@@ -27,14 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
         doingButton.textContent = 'Start Doing';
         doingButton.className = 'bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded';
         doingButton.onclick = function() {
-            moveTask(this.parentElement.parentElement, doingList);
+            moveTask(this.parentElement.parentElement, 'doing');
         };
         
         const doneButton = document.createElement('button');
         doneButton.textContent = 'Mark Done';
         doneButton.className = 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded ml-2';
         doneButton.onclick = function() {
-            moveTask(this.parentElement.parentElement, doneList);
+            moveTask(this.parentElement.parentElement, 'done');
         };
         
         const deleteButton = document.createElement('button');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deleteButton.className = 'bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2';
         deleteButton.onclick = function() {
             this.parentElement.parentElement.remove();
-            updateLocalStorage();
+            saveTasks();
         };
         
         buttonsContainer.appendChild(doingButton);
@@ -55,15 +56,41 @@ document.addEventListener('DOMContentLoaded', () => {
         return listItem;
     }
 
-    function moveTask(taskElement, targetList) {
+    function moveTask(taskElement, newStatus) {
+        const targetList = newStatus === 'doing' ? doingList : doneList;
         targetList.appendChild(taskElement);
-        updateLocalStorage();
+        taskElement.dataset.status = newStatus;
+        saveTasks();
     }
 
-    function updateLocalStorage() {
-        // Implement the local storage update logic here
+    function saveTasks() {
+        const tasks = [];
+
+        document.querySelectorAll('.column ul li').forEach(taskElement => {
+            tasks.push({
+                text: taskElement.querySelector('span').textContent,
+                status: taskElement.dataset.status
+            });
+        });
+
+        localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    window.addTask = addTask; // Expose addTask function to global scope so it can be called from onclick
+    function loadTasks() {
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        tasks.forEach(task => {
+            const listItem = createTaskElement(task.text, task.status);
+            if (task.status === 'todo') {
+                todoList.appendChild(listItem);
+            } else if (task.status === 'doing') {
+                doingList.appendChild(listItem);
+            } else if (task.status === 'done') {
+                doneList.appendChild(listItem);
+            }
+        });
+    }
+
+    loadTasks();
+    window.addTask = addTask;
 });
-
